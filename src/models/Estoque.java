@@ -3,7 +3,7 @@ package models;
 public class Estoque {
     private Integer quant;
     private Integer quantMinima;
-    //private Produto produto;
+    private Produtos produto;
 
     public Integer getQuant() {
         return quant;
@@ -17,6 +17,10 @@ public class Estoque {
     }
     public void setQuantMinima(Integer quantMinima) {
         this.quantMinima = quantMinima;
+    }
+
+    public boolean precisaRepor(){
+        return quant < quantMinima;
     }
    
 }

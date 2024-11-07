@@ -28,13 +28,10 @@ public class Vendas {
         calcularValor();
     }
 
-    private Double calcularValor(){
+    private void calcularValor(){
         valorTotal = 0d;
-        for (ItemVenda item : produtosVendidos) {
-            //valorTotal += item.getProduto().getPreco() * item.getQuantidadeVendida();
-            
-        }
-        return 0d;//Esperando Produto para terminar vendas
+        for (ItemVenda item : produtosVendidos)
+            valorTotal += item.getProduto().getPreco() * item.getQuantidadeVendida();
     }
     
     public Date getDataVenda() {

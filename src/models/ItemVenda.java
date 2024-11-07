@@ -2,18 +2,18 @@ package models;
 
 public class ItemVenda {
     
-    //private Produto produto;
+    private Produtos produto;
     
     private int quantidadeVendida;
 
-    public ItemVenda(/*Produto produto,*/ int quantidadeVendida) {
-        //this.produto = produto;
+    public ItemVenda(Produtos produto, int quantidadeVendida) {
+        this.produto = produto;
         this.quantidadeVendida = quantidadeVendida;
     }
 
-    /*public Produto getProduto() { 
+    public Produtos getProduto() {
         return produto; 
-    }*/
+    }
     
     public int getQuantidadeVendida() { 
         return quantidadeVendida; 

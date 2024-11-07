@@ -7,12 +7,13 @@ import models.Cliente;
 import models.ItemVenda;
 import models.Vendas;
 import models.Vendedor;
+import models.Produtos;
 
 public class VendasController {
     private List<Vendas> historicoVendas = new LinkedList<>();
     public void registrarVenda(Date dataVenda, List<ItemVenda> itens, String nomeCliente, String nomeVendedor){
         for (ItemVenda item : itens) {
-            Produto produto = item.getProduto();
+            Produtos produto = item.getProduto();
             int novaQuantidade = produto.getQuantidadeEstoque() - item.getQuantidadeVendida();
             produto.setQuantidadeEstoque(novaQuantidade);
         }
