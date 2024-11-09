@@ -2,6 +2,7 @@ package controllers;
 import models.Categoria;
 import models.Fornecedor;
 import models.Produtos;
+import persistence.ProdutoDAO;
 
 import javax.swing.*;
 import java.util.List;
@@ -14,22 +15,22 @@ public class ProdutoController {
 
     public boolean adicionarProduto(Integer codigo, String nome, Categoria categoria, Fornecedor fornecedor, Double preco, Integer quantEstoque) {
         Produtos novoProduto = new Produtos(codigo, nome, categoria, fornecedor, preco, quantEstoque);
-        return produtoDAO.adicionarProduto(novoProduto);
+        return ProdutoDAO.adicionarProduto(novoProduto);
     }
 
     public boolean editarProduto(Integer codigo, String nome, Categoria categoria, Fornecedor fornecedor, Double preco, Integer quantEstoque) {
         Produtos produtoEditado = new Produtos(codigo, nome, categoria, fornecedor, preco, quantEstoque);
-        return produtoDAO.atualizarProduto(produtoEditado);
+        return ProdutoDAO.atualizarProduto(produtoEditado);
     }
     public boolean excluirProduto(Integer codigo) {
-        return produtoDAO.removerProduto(codigo);
+        return ProdutoDAO.removerProduto(codigo);
     }
 
     public Produtos buscarProdutoPorCodigo(Integer codigo) {
-        return produtoDAO.buscarPorCodigo(codigo);
+        return ProdutoDAO.buscarProdutoPorCodigo(codigo);
     }
 
     public List<Produtos> listarTodosProdutos() {
-        return produtoDAO.listarTodos();
+        return ProdutoDAO.listarTodos();
     }
 }

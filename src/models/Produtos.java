@@ -22,6 +22,7 @@ public class Produtos {
     public Integer getCodigo() {
         return codigo;
     }
+
     public void setCodigo(Integer codigo) {
         this.codigo = codigo;
     }
@@ -29,6 +30,7 @@ public class Produtos {
     public String getNome() {
         return nome;
     }
+
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -36,6 +38,7 @@ public class Produtos {
     public Categoria getCategoria() {
         return categoria;
     }
+
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
@@ -43,6 +46,7 @@ public class Produtos {
     public Fornecedor getFornecedor() {
         return fornecedor;
     }
+
     public void setFornecedor(Fornecedor fornecedor) {
         this.fornecedor = fornecedor;
     }
@@ -50,6 +54,7 @@ public class Produtos {
     public Double getPreco() {
         return preco;
     }
+
     public void setPreco(Double preco) {
         this.preco = preco;
     }
@@ -57,6 +62,7 @@ public class Produtos {
     public Integer getQuantEstoque() {
         return quantEstoque;
     }
+
     public void setQuantEstoque(Integer quantEstoque) {
         this.quantEstoque = quantEstoque;
     }
@@ -74,4 +80,13 @@ public class Produtos {
         return Objects.hash(codigo);
     }
 
+    @Override
+    public String toString() {
+        return "Produto{" +
+                "id=" + codigo +
+                ", nome='" + nome + '\'' +
+                ", preco=" + preco +
+                '}';
+
+    }
 }
