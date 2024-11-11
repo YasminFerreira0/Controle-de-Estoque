@@ -1,26 +1,24 @@
 package models;
 
-import java.util.List;
 import java.util.Date;
 
 public class Vendas {
     private Date dataVenda;
-    private List<ItemVenda> produtosVendidos;
-    private Integer quantVendida;
+    private Produtos[] produtosVendidos;
+    private Integer[] quantVendida;
     private Double valorTotal;
     private Cliente cliente;
     private Vendedor vendedor;
 
-    public Vendas(Date dataVenda, List<ItemVenda> produtosVendidos, Integer quantVendida, Double valorTotal, Cliente cliente, Vendedor vendedor) {
+    public Vendas(Date dataVenda, Produtos[] produtosVendidos, Integer[] quantVendida, Double valorTotal, Cliente cliente, Vendedor vendedor) {
         this.dataVenda = dataVenda;
         this.produtosVendidos = produtosVendidos;
         this.quantVendida = quantVendida;
         this.valorTotal = valorTotal;
         this.cliente = cliente;
         this.vendedor = vendedor;
-        calcularValor();
     }
-    public Vendas(Date dataVenda, List<ItemVenda> produtosVendidos, Cliente cliente, Vendedor vendedor){
+    public Vendas(Date dataVenda, Produtos[] produtosVendidos, Cliente cliente, Vendedor vendedor){
         this.dataVenda = dataVenda;
         this.produtosVendidos = produtosVendidos;
         this.cliente = cliente;
@@ -30,8 +28,9 @@ public class Vendas {
 
     private void calcularValor(){
         valorTotal = 0d;
-        for (ItemVenda item : produtosVendidos)
-            valorTotal += item.getProduto().getPreco() * item.getQuantidadeVendida();
+        for (int i =0; i < produtosVendidos.length; i++){
+            valorTotal += produtosVendidos[i].getPreco() * quantVendida[i];
+        }
     }
     
     public Date getDataVenda() {
@@ -41,17 +40,17 @@ public class Vendas {
         this.dataVenda = dataVenda;
     }
 
-    public List<ItemVenda> getProdutosVendidos() {
+    public Produtos[] getProdutosVendidos() {
         return produtosVendidos;
     }
-    public void setProdutosVendidos(List<ItemVenda> produtosVendidos) {
+    public void setProdutosVendidos(Produtos[] produtosVendidos) {
         this.produtosVendidos = produtosVendidos;
     }
 
-    public Integer getQuantVendida() {
+    public Integer[] getQuantVendida() {
         return quantVendida;
     }
-    public void setQuantVendida(Integer quantVendida) {
+    public void setQuantVendida(Integer[] quantVendida) {
         this.quantVendida = quantVendida;
     }
 

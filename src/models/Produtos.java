@@ -9,14 +9,16 @@ public class Produtos {
     private Fornecedor fornecedor;
     private Double preco;
     private Integer quantEstoque;
+    private Integer quantMinima;
 
-    public Produtos(Integer codigo, String nome, Categoria categoria, Fornecedor fornecedor, Double preco, Integer quantEstoque) {
+    public Produtos(Integer codigo, String nome, Categoria categoria, Fornecedor fornecedor, Double preco, Integer quantEstoque, Integer quantMinima) {
         this.codigo = codigo;
         this.nome = nome;
         this.categoria = categoria;
         this.fornecedor = fornecedor;
         this.preco = preco;
         this.quantEstoque = quantEstoque;
+        this.quantMinima = quantMinima;
     }
 
     public Integer getCodigo() {
@@ -65,6 +67,14 @@ public class Produtos {
 
     public void setQuantEstoque(Integer quantEstoque) {
         this.quantEstoque = quantEstoque;
+    }
+
+    public Integer getQuantMinima() {
+        return quantMinima;
+    }
+
+    public void setQuantMinima(Integer quantMinima) {
+        this.quantMinima = quantMinima;
     }
 
     @Override
