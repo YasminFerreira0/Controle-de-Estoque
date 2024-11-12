@@ -25,5 +25,9 @@ public class Cliente {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    public boolean validaCPF(){
+        return CPF.matches("\\d{11}");
+    }
     
 }

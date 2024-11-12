@@ -18,19 +18,43 @@ public class Vendas {
         this.cliente = cliente;
         this.vendedor = vendedor;
     }
-    public Vendas(Date dataVenda, Produtos[] produtosVendidos, Cliente cliente, Vendedor vendedor){
+
+    public Vendas(Date dataVenda, Produtos[] produtosVendidos, Integer[] quantVendida, Cliente cliente, Vendedor vendedor) {
+        if (cliente == null) {
+            throw new IllegalArgumentException("Cliente não pode ser nulo.");
+        }
+        if (vendedor == null) {
+            throw new IllegalArgumentException("Vendedor não pode ser nulo.");
+        }
+
         this.dataVenda = dataVenda;
         this.produtosVendidos = produtosVendidos;
+        this.quantVendida = quantVendida != null ? quantVendida : new Integer[produtosVendidos.length];
         this.cliente = cliente;
         this.vendedor = vendedor;
-        calcularValor();
+        this.valorTotal = calcularValor();
     }
 
-    private void calcularValor(){
-        valorTotal = 0d;
-        for (int i =0; i < produtosVendidos.length; i++){
-            valorTotal += produtosVendidos[i].getPreco() * quantVendida[i];
+    public Vendas(Date dataVenda, Produtos[] produtosVendidos, Cliente cliente, Vendedor vendedor) {
+        this(dataVenda, produtosVendidos, new Integer[produtosVendidos.length], cliente, vendedor);
+        // Inicializar as quantidades como 1 para cada produto
+        for (int i = 0; i < quantVendida.length; i++) {
+            quantVendida[i] = 1;
         }
+    }
+
+    private Double calcularValor() {
+        valorTotal = 0d;
+        if (produtosVendidos == null || quantVendida == null) {
+            return 0d;
+        }
+
+        for (int i = 0; i < produtosVendidos.length; i++) {
+            int quantidadeDisponivel = Math.min(quantVendida[i], produtosVendidos[i].getQuantEstoque());
+            valorTotal += produtosVendidos[i].getPreco() * quantidadeDisponivel;
+        }
+
+        return valorTotal;
     }
     
     public Date getDataVenda() {
@@ -55,7 +79,7 @@ public class Vendas {
     }
 
     public Double getValorTotal() {
-        return valorTotal;
+        return calcularValor();
     }
     public void setValorTotal(Double valorTotal) {
         this.valorTotal = valorTotal;
