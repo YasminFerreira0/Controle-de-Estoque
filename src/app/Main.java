@@ -1,6 +1,7 @@
 package app;
 
 import controllers.ClienteController;
+import controllers.VendedorController;
 import controllers.ProdutoController;
 
 import javax.swing.*;
@@ -8,6 +9,7 @@ import javax.swing.*;
 public class Main {
     public static void main(String[] args) {
         ClienteController clienteController = new ClienteController();
+        VendedorController vendedorController = new VendedorController();
 
         try{
             do{
@@ -38,6 +40,7 @@ public class Main {
                         System.out.println("Você escolheu Realizar Venda");
 
                         clienteController.cadastraCliente();
+                        vendedorController.cadastroVendedor();
 
                         break;
                     case 3:
