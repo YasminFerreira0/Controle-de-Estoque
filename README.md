@@ -99,7 +99,7 @@ Requisitos Funcionais:
 
 ## Diagrama de Classe
 
-![Diagrama de Classe](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![Diagrama de Classe](/.idea/images/diagramaClasse.png)
 
 ## Authors
 - [Cauã Rogrigues](https://github.com/stelladesolaria)
