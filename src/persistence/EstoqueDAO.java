@@ -7,14 +7,11 @@ import java.util.LinkedList;
 
 public class EstoqueDAO {
     private List<Estoque> estoques = new LinkedList<>();
-    public EstoqueDAO(){
-        this.estoques = new LinkedList<>();
-    }
 
     public boolean adicionarEstoque(Estoque estoque) {
         for (Estoque e : estoques) {
             if (e.getProduto().getCodigo().equals(estoque.getProduto().getCodigo())) {
-                return false; // Já existe estoque para esse produto
+                return false;
             }
         }
         estoques.add(estoque);
@@ -38,7 +35,7 @@ public class EstoqueDAO {
     public Estoque buscarEstoquePorProduto(Produtos produto) {
         for (Estoque e : estoques) {
             if (e.getProduto().getCodigo().equals(produto.getCodigo())) {
-                return e; // Retorna o estoque correspondente ao produto
+                return e;
             }
         }
         return null;
