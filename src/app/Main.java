@@ -1,15 +1,12 @@
 package app;
-
-import controllers.ClienteController;
-import controllers.VendedorController;
+import controllers.VendaController;
 import controllers.ProdutoController;
 
 import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        ClienteController clienteController = new ClienteController();
-        VendedorController vendedorController = new VendedorController();
+        VendaController vendaController = new VendaController();
 
         try{
             do{
@@ -39,8 +36,7 @@ public class Main {
                     case 2:
                         System.out.println("Você escolheu Realizar Venda");
 
-                        clienteController.cadastraCliente();
-                        vendedorController.cadastroVendedor();
+                        vendaController.registrarVenda();
 
                         break;
                     case 3:
