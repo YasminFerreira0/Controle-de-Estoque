@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ProdutoController {
 
-    private List<Produtos> estoque;
+    private final List<Produtos> estoque;
 
     public ProdutoController() {
         this.estoque = new ArrayList<>();
@@ -39,7 +39,7 @@ public class ProdutoController {
             boolean produtoEncontrado = false;
             for (int i = 0; i < estoque.size(); i++) {
                 Produtos p = estoque.get(i);
-                if (p.getCodigo().equals(codigo)) {
+                if (Integer.toString(p.getCodigo()).equals(codigo)) {
                     estoque.set(i, novoProduto);
                     produtoEncontrado = true;
                     break;
@@ -65,7 +65,7 @@ public class ProdutoController {
             boolean produtoEncontrado = false;
             for (int i = 0; i < estoque.size(); i++) {
                 Produtos p = estoque.get(i);
-                if (p.getCodigo().equals(codigo)) {
+                if (Integer.toString(p.getCodigo()).equals(codigo)) {
                     estoque.remove(i);
                     produtoEncontrado = true;
                     break;
@@ -93,7 +93,7 @@ public class ProdutoController {
                 estoqueInfo.append(produto).append("\n");
             }
 
-            if (estoqueInfo.length() == 0) {
+            if (estoqueInfo.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Nenhum produto no estoque.",
                         "Informação", JOptionPane.INFORMATION_MESSAGE);
             } else {
@@ -111,11 +111,11 @@ public class ProdutoController {
             StringBuilder alertas = new StringBuilder();
             for (Produtos produto : estoque) {
                 if (produto.getQuantEstoque() <= produto.getQuantMinima()) {
-                    alertas.append("Alerta: " + produto.getNome() + " está com estoque abaixo do mínimo.\n");
+                    alertas.append("Alerta: ").append(produto.getNome()).append(" está com estoque abaixo do mínimo.\n");
                 }
             }
 
-            if (alertas.length() == 0) {
+            if (alertas.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Nenhum produto com estoque abaixo do mínimo.",
                         "Informação", JOptionPane.INFORMATION_MESSAGE);
             } else {
@@ -130,7 +130,7 @@ public class ProdutoController {
 
     public Produtos buscarProduto(String codigo) {
         for (Produtos produto : estoque) {
-            if (produto.getCodigo().equals(codigo)) {
+            if (Integer.toString(produto.getCodigo()).equals(codigo)) {
                 return produto;
             }
         }
