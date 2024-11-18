@@ -1,16 +1,18 @@
 package app;
 import controllers.VendaController;
 import controllers.ProdutoController;
+import models.Vendas;
 
 import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
         VendaController vendaController = new VendaController();
+        ProdutoController produtoController = new ProdutoController();
 
         try{
             do{
-                String[] opcoes = {"Produto", "Estoque", "Realizar Venda", "Relatorios","Sair"};
+                String[] opcoes = {"Produto", "Estoque", "Venda", "Relatorios","Sair"};
                 ImageIcon icone = new ImageIcon("./.idea/images/loja.png");
 
                 int opc = JOptionPane.showOptionDialog(
@@ -29,6 +31,7 @@ public class Main {
                 switch (opc) {
                     case 0:
                         System.out.println("Você escolheu Produto");
+                        produtoController.adicionarProduto();
                         break;
                     case 1:
                         System.out.println("Você escolheu Estoque");

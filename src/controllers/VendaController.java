@@ -41,9 +41,8 @@ public class VendaController {
 
                 if (dataVendaStr == null) {
                     JOptionPane.showMessageDialog(null, "Operação de venda cancelada. Retornando ao menu principal.", "Cancelado", JOptionPane.INFORMATION_MESSAGE);
-                    return; // Retorna ao menu principal
+                    return;
                 }
-
                 if (dataVendaStr.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Data não informada. Tente novamente.", "Aviso", JOptionPane.WARNING_MESSAGE);
                     continue;
@@ -59,18 +58,19 @@ public class VendaController {
 
             Cliente cliente = clienteController.cadastraCliente();
             if (cliente == null) {
+                // Cancelado no cadastro do cliente
                 JOptionPane.showMessageDialog(null, "Operação de venda cancelada durante o cadastro do cliente. Retornando ao menu principal.", "Cancelado", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
             Vendedor vendedor = vendedorController.cadastroVendedor();
             if (vendedor == null) {
+                // Cancelado no cadastro do vendedor
                 JOptionPane.showMessageDialog(null, "Operação de venda cancelada durante o cadastro do vendedor. Retornando ao menu principal.", "Cancelado", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro inesperado: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             throw new RuntimeException(e);
         }
     }

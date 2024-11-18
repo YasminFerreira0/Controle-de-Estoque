@@ -25,21 +25,23 @@ public class ProdutoController {
         try {
             String nome = JOptionPane.showInputDialog("Digite o nome do produto:");
             String codigoStr = JOptionPane.showInputDialog("Digite o código do produto:");
-            String categoriaNome = JOptionPane.showInputDialog("Digite a categoria do produto:");
+            Categoria categoria = escolherCategoria(); // Obtendo a categoria como enum
+            if (categoria == null) return; // Cancelamento de operação
+
             String fornecedorNome = JOptionPane.showInputDialog("Digite o fornecedor do produto:");
             String precoStr = JOptionPane.showInputDialog("Digite o preço do produto:");
             String quantidadeStr = JOptionPane.showInputDialog("Digite a quantidade em estoque:");
             String quantMinimaStr = JOptionPane.showInputDialog("Digite a quantidade mínima do produto:");
 
             // Cancelamento de operação
-            if (nome == null || codigoStr == null || categoriaNome == null || fornecedorNome == null ||
-                    precoStr == null || quantidadeStr == null || quantMinimaStr == null) {
+            if (nome == null || codigoStr == null || fornecedorNome == null || precoStr == null ||
+                    quantidadeStr == null || quantMinimaStr == null) {
                 JOptionPane.showMessageDialog(null, "Operação de cadastro de produto cancelada.", "Cancelado", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
             // Verificando se os campos não estão vazios
-            if (nome.isEmpty() || codigoStr.isEmpty() || categoriaNome.isEmpty() || fornecedorNome.isEmpty() ||
+            if (nome.isEmpty() || codigoStr.isEmpty() || fornecedorNome.isEmpty() ||
                     precoStr.isEmpty() || quantidadeStr.isEmpty() || quantMinimaStr.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Todos os campos devem ser preenchidos.", "Aviso", JOptionPane.WARNING_MESSAGE);
                 return;
@@ -51,11 +53,8 @@ public class ProdutoController {
             int quantidade = Integer.parseInt(quantidadeStr);
             int quantMinima = Integer.parseInt(quantMinimaStr);
 
-            // Criando os objetos Categoria e Fornecedor com os dados inseridos
-            Categoria categoria = new Categoria(categoriaNome); // ALTERAR PORQUE CATEGORIA É UMA LISTA
-            Fornecedor fornecedor = new Fornecedor(fornecedorNome); //*********-----
-
             // Criando o objeto Produto
+            Fornecedor fornecedor = new Fornecedor(fornecedorNome);
             Produtos produto = new Produtos(codigo, nome, categoria, fornecedor, preco, quantidade, quantMinima);
 
             // Verificando se o produto já existe
@@ -74,6 +73,32 @@ public class ProdutoController {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao adicionar o produto: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    // Metodo auxiliar para selecionar a categoria
+    private Categoria escolherCategoria() {
+        Categoria[] categorias = Categoria.values();
+        String[] nomesCategorias = new String[categorias.length];
+        for (int i = 0; i < categorias.length; i++) {
+            nomesCategorias[i] = categorias[i].name();
+        }
+
+        String categoriaSelecionada = (String) JOptionPane.showInputDialog(
+                null,
+                "Escolha a categoria do produto:",
+                "Seleção de Categoria",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                nomesCategorias,
+                nomesCategorias[0]
+        );
+
+        if (categoriaSelecionada == null) {
+            JOptionPane.showMessageDialog(null, "Operação cancelada.", "Cancelado", JOptionPane.INFORMATION_MESSAGE);
+            return null;
+        }
+
+        return Categoria.valueOf(categoriaSelecionada);
     }
 
     // Editar produto (com entrada via JOptionPane)
@@ -104,21 +129,22 @@ public class ProdutoController {
 
             // Entrada dos novos dados para o produto
             String nome = JOptionPane.showInputDialog("Digite o novo nome do produto:", produtoExistente.getNome());
-            String categoriaNome = JOptionPane.showInputDialog("Digite a nova categoria do produto:", produtoExistente.getCategoria().getNome());
+            Categoria novaCategoria = escolherCategoria(); // Obtendo nova categoria
+            if (novaCategoria == null) return; // Cancelamento de operação
+
             String fornecedorNome = JOptionPane.showInputDialog("Digite o novo fornecedor do produto:", produtoExistente.getFornecedor().getNome());
             String precoStr = JOptionPane.showInputDialog("Digite o novo preço do produto:", produtoExistente.getPreco());
             String quantidadeStr = JOptionPane.showInputDialog("Digite a nova quantidade em estoque:", produtoExistente.getQuantEstoque());
             String quantMinimaStr = JOptionPane.showInputDialog("Digite a nova quantidade mínima do produto:", produtoExistente.getQuantMinima());
 
-            if (nome == null || categoriaNome == null || fornecedorNome == null || precoStr == null ||
-                    quantidadeStr == null || quantMinimaStr == null) {
+            // Cancelamento de operação
+            if (nome == null || fornecedorNome == null || precoStr == null || quantidadeStr == null || quantMinimaStr == null) {
                 JOptionPane.showMessageDialog(null, "Operação de edição de produto cancelada.", "Cancelado", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
             // Verificando se os campos não estão vazios
-            if (nome.isEmpty() || categoriaNome.isEmpty() || fornecedorNome.isEmpty() || precoStr.isEmpty() ||
-                    quantidadeStr.isEmpty() || quantMinimaStr.isEmpty()) {
+            if (nome.isEmpty() || fornecedorNome.isEmpty() || precoStr.isEmpty() || quantidadeStr.isEmpty() || quantMinimaStr.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Todos os campos devem ser preenchidos.", "Aviso", JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -130,8 +156,8 @@ public class ProdutoController {
 
             // Atualizando os dados do produto
             produtoExistente.setNome(nome);
-            produtoExistente.setCategoria(new Categoria(categoriaNome)); // Atualizando categoria
-            produtoExistente.setFornecedor(new Fornecedor(fornecedorNome)); // Atualizando fornecedor
+            produtoExistente.setCategoria(novaCategoria); // Atualizando categoria
+            produtoExistente.setFornecedor(new Fornecedor(fornecedorNome));
             produtoExistente.setPreco(preco);
             produtoExistente.setQuantEstoque(quantidade);
             produtoExistente.setQuantMinima(quantMinima);
