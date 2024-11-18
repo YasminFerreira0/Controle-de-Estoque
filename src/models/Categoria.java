@@ -7,4 +7,5 @@ public enum Categoria {
     Brinquedos,
     Esportes,
     Outros;
+
 }
