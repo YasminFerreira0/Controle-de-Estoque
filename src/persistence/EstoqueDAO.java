@@ -41,7 +41,7 @@ public class EstoqueDAO {
         return null;
     }
 
-    public List<Estoque> listarTodos() {
+    public static List<Estoque> listarTodos() {
         return new LinkedList<>(estoques);
     }
 }

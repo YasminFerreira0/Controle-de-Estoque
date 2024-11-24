@@ -206,20 +206,4 @@ public class ProdutoController {
         }
     }
 
-    public void visualizarEstoque() {
-        try {
-            StringBuilder estoqueInfo = new StringBuilder();
-            for (Produtos produto : estoque) {
-                estoqueInfo.append(produto).append("\n");
-            }
-
-            if (estoqueInfo.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Nenhum produto no estoque.", "Informação", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(null, estoqueInfo.toString(), "Estoque", JOptionPane.INFORMATION_MESSAGE);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao visualizar o estoque: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-        }
-    }
 }

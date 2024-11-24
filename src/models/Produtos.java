@@ -21,7 +21,7 @@ public class Produtos {
         this.quantMinima = quantMinima;
     }
 
-    public Integer getCodigo() {
+    public static Integer getCodigo() {
         return codigo;
     }
 
@@ -37,7 +37,7 @@ public class Produtos {
         this.nome = nome;
     }
 
-    public Categoria getCategoria() {
+    public static Categoria getCategoria() {
         return categoria;
     }
 
@@ -61,7 +61,7 @@ public class Produtos {
         this.preco = preco;
     }
 
-    public Integer getQuantEstoque() {
+    public static Integer getQuantEstoque() {
         return quantEstoque;
     }
 

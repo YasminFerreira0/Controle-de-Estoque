@@ -1,6 +1,7 @@
 package persistence;
 
 import models.Fornecedor;
+import models.Estoque;
 import java.util.List;
 import java.util.LinkedList;
 
@@ -15,6 +16,9 @@ public class FornecedorDAO {
         }
         this.fornecedores.add(fornecedor);
         return true;
+    }
+    public List<Estoque> listarEstoques() {
+        return estoqueList;
     }
 }
 
