@@ -76,10 +76,10 @@ public class Main {
                                     break;
 
                                 case 3:  // Sair
-                                    return;
+                                    break;
 
                                 default:
-                                    JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.", "Erro", JOptionPane.ERROR_MESSAGE);
+                                    System.exit(0);
                             }
                         }
                     case 1:
@@ -344,7 +344,7 @@ public class Main {
 
                         JOptionPane.showOptionDialog(
                                 null,                                // Componente pai
-                                "Encerranddo Programa!!",     // Mensagem
+                                "Encerrando o Programa!!",     // Mensagem
                                 "Saída",                             // Título da janela
                                 JOptionPane.DEFAULT_OPTION,          // Tipo de opção padrão
                                 JOptionPane.INFORMATION_MESSAGE,     // Tipo de mensagem (informação)
