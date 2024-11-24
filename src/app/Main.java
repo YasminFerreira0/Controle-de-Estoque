@@ -19,7 +19,7 @@ public class Main {
     public static void main(String[] args) {
         VendaController vendaController = new VendaController();
         ProdutoController produtoController = new ProdutoController();
-        VendaDAO vendaDAO = new VendaDAO();
+        List<Vendas> vendas = VendaDAO.listarHistoricoVendas();
         EstoqueController estoqueController = new EstoqueController();
 
         ImageIcon loja = new ImageIcon("./.idea/images/loja.png");
@@ -47,14 +47,46 @@ public class Main {
                         //*******************************************************************************************
                         // Switch case referente as rotinas com produto: cadastrar, editar, excluir
                         //*******************************************************************************************
+                        while (true) {
+                            // Menu com as opções
+                            String[] opcProd = {"Cadastrar Produto", "Editar Produto", "Excluir Produto", "Sair"};
+                            int escolha = JOptionPane.showOptionDialog(
+                                    null,
+                                    "Escolha uma opção:",
+                                    "Menu de Operações",
+                                    JOptionPane.DEFAULT_OPTION,
+                                    JOptionPane.INFORMATION_MESSAGE,
+                                    null,
+                                    opcProd,
+                                    opcProd[0]
+                            );
 
-                    break;
+                            // Lógica de escolha das opções
+                            switch (escolha) {
+                                case 0:  // Cadastrar Produto
+                                    produtoController.adicionarProduto();
+                                    break;
+
+                                case 1:  // Editar Produto
+                                    produtoController.editarProduto();
+                                    break;
+
+                                case 2:  // Excluir Produto
+                                    produtoController.excluirProduto();
+                                    break;
+
+                                case 3:  // Sair
+                                    return;
+
+                                default:
+                                    JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.", "Erro", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
                     case 1:
-                        //*******************************************************************************************
-                        //implementar visualização do estoque com filtro por categoria e quantidade, EstoqueController
-                        //*******************************************************************************************
 
-                    break;
+                        estoqueController.visualizarEstoque();
+
+                        break;
                     case 2:
                         //Implementação do VendaController
                         vendaController.registrarVenda();
@@ -75,14 +107,7 @@ public class Main {
 
                         switch(opcRelatorio){
                             case 0:
-                                /*
-                                Relatório de Estoque: Listagem da quantidade atual de produtos em estoque, indicando produtos em quantidade mínima.
-                                Filtros para relatórios:
-                                    Por Produto: Listagem de vendas ou estoque de um produto específico.
-                                    Por Categoria: Listagem de vendas ou estoque por categorias de produtos.
-                                    Por Data: Permitir selecionar períodos específicos para análise.
-                                    Por Volume de Vendas: Filtrar produtos mais vendidos.
-                                */
+
                                 String[] filtrosEstoque = {"Por Produto", "Por Categoria", "Por Volume de Vendas", "Por Quantidade em Estoque"};
 
                                 int opcFiltroEstoque = JOptionPane.showOptionDialog(
@@ -156,7 +181,7 @@ public class Main {
                                     case 2: // Por Volume de Vendas
                                         Map<Produtos, Integer> volumePorProduto = new HashMap<>();
                                         // Assumindo que o volume de vendas é calculado a partir das vendas anteriores
-                                        for (Vendas venda : VendaDAO) {  // Você deve ter um histórico de vendas aqui
+                                        for (Vendas venda : vendas) {  // Você deve ter um histórico de vendas aqui
                                             for (Produtos produto : venda.getProdutosVendidos()) {
                                                 volumePorProduto.put(produto, volumePorProduto.getOrDefault(produto, 0) + 1);  // Conta a quantidade de vezes que o produto foi vendido
                                             }
@@ -202,7 +227,7 @@ public class Main {
                                         opcoes[0]                        // Opção padrão selecionada
                                 );
 
-                                List<Vendas> vendas = vendaDAO.listarHistoricoVendas();
+
                                 if (vendas.isEmpty()) {
                                     JOptionPane.showMessageDialog(null, "Nenhuma venda registrada.", "Aviso", JOptionPane.WARNING_MESSAGE);
                                     return;

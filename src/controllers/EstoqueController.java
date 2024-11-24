@@ -12,19 +12,6 @@ import java.util.List;
 public class EstoqueController {
 
 
-
-    //********************************************************************************
-
-    //falata fazer
-    //Visualização do estado do estoque, com filtros por categorias e quantidades.
-
-
-
-    //********************************************************************************
-
-
-
-
     private static EstoqueDAO estoqueDAO = new EstoqueDAO();
 
     public static Produtos buscarProdutoPorCodigo(String codigo) {

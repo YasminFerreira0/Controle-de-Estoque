@@ -17,8 +17,6 @@ public class FornecedorDAO {
         this.fornecedores.add(fornecedor);
         return true;
     }
-    public List<Estoque> listarEstoques() {
-        return estoqueList;
-    }
+
 }
 

@@ -6,7 +6,7 @@ import  java.util.List;
 import java.util.LinkedList;
 
 public class EstoqueDAO {
-    private List<Estoque> estoques = new LinkedList<>();
+    private static List<Estoque> estoques = new LinkedList<>();
 
     public boolean adicionarEstoque(Estoque estoque) {
         for (Estoque e : estoques) {

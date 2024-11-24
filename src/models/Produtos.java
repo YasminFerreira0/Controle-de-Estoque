@@ -3,12 +3,12 @@ package models;
 import java.util.Objects;
 
 public class Produtos {
-    private Integer codigo;
+    private static Integer codigo;
     private String nome;
-    private Categoria categoria;
+    private static Categoria categoria;
     private Fornecedor fornecedor;
     private Double preco;
-    private Integer quantEstoque;
+    private static Integer quantEstoque;
     private Integer quantMinima;
 
     public Produtos(Integer codigo, String nome, Categoria categoria, Fornecedor fornecedor, Double preco, Integer quantEstoque, Integer quantMinima) {
