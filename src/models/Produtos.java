@@ -62,7 +62,7 @@ public class Produtos {
         this.preco = preco;
     }
 
-    public static Integer getQuantEstoque() {
+    public Integer getQuantEstoque() {
         return quantEstoque;
     }
 

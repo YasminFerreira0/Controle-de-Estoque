@@ -69,13 +69,11 @@ public class Main {
                                     break;
 
                                 case 1:  // Editar Produto
-                                    //produtoController
-                                    // .editarProduto();
+                                    produtoController.editarProduto();
                                     break;
 
                                 case 2:  // Excluir Produto
-                                    //produtoController
-                                    // .excluirProduto();
+                                    produtoController.excluirProduto();
                                     break;
 
                                 case 3:  // Sair

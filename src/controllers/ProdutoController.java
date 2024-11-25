@@ -20,6 +20,7 @@ public class ProdutoController {
 
     ImageIcon produtoIcone = new ImageIcon("./.idea/images/produto.png");
     ImageIcon sucessoProduto = new ImageIcon("./.idea/images/sucessoProduto.png");
+    ImageIcon excluirProduto = new ImageIcon("./.idea/images/produtoExcluido.png");
     // Adicionar produto
     public void adicionarProduto() {
 
@@ -117,19 +118,30 @@ public class ProdutoController {
             estoqueDAO.adicionarEstoque(estoque);
 
 
-            JOptionPane.showOptionDialog(
-                    null,                                                   // Componente pai
-                    "Produto adicionado com sucesso!",  // Mensagem
-                    "Sucesso",                                              // Título da janela
-                    JOptionPane.DEFAULT_OPTION,                              // Tipo de opção padrão
-                    JOptionPane.INFORMATION_MESSAGE,                         // Tipo de mensagem (informação)
-                    sucessoProduto,
-                    // Ícone (null para usar o padrão)
-                    null,                                                   // Opções a serem exibidas (null para padrão)
-                    null                                                    // Opção padrão selecionada
+            // Exibindo mensagem detalhada
+            JOptionPane.showMessageDialog(
+                    null,
+                    String.format(
+                            "Produto adicionado com sucesso!\n\n" +
+                                    "Código: %s\n" +
+                                    "Nome: %s\n" +
+                                    "Categoria: %s\n" +
+                                    "Fornecedor: %s\n" +
+                                    "Preço: R$ %.2f\n" +
+                                    "Quantidade: %d\n" +
+                                    "Quantidade Mínima: %d",
+                            produto.getCodigo(),
+                            produto.getNome(),
+                            produto.getCategoria(),
+                            produto.getFornecedor().getNome(),
+                            produto.getPreco(),
+                            produto.getQuantEstoque(),
+                            produto.getQuantMinima()
+                    ),
+                    "Sucesso",
+                    JOptionPane.INFORMATION_MESSAGE,
+                    sucessoProduto
             );
-
-            System.out.printf( produto.getNome() + produto.getCodigo());
 
 
         } catch (NumberFormatException e) {
@@ -167,44 +179,84 @@ public class ProdutoController {
 
 
 
-    /*
-
-
     // Editar produto (com entrada via JOptionPane)
     public void editarProduto() {
         try {
-            String codigoStr = JOptionPane.showInputDialog("Digite o código do produto a ser editado:");
+            String codigo = String.valueOf(JOptionPane.showInputDialog(
+                    null,                                // Componente pai
+                    "Digite o código do produto a ser editado:",
+                    "Editar Produtos",
+                    JOptionPane.PLAIN_MESSAGE,           // Tipo de mensagem (mensagem simples)
+                    produtoIcone,                                // Ícone (null para usar o padrão)
+                    null,                                // Opções a serem exibidas (null para padrão)
+                    null                                 // Opção padrão selecionada
+            ));
 
-            if (codigoStr == null || codigoStr.isEmpty()) {
+            if (codigo == null || codigo.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Operação de edição de produto cancelada.", "Cancelado", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
-            int codigo = Integer.parseInt(codigoStr);
 
-            // Verificando se o produto existe
-            Produtos produtoExistente = null;
-            for (Produtos produto : estoque) {
-                if (produto.getCodigo().equals(codigo)) {
-                    produtoExistente = produto;
-                    break;
-                }
-            }
-
+            Produtos produtoExistente = produtoDAO.buscarProdutoPorCodigo(codigo); // Buscar produto no banco de dados
             if (produtoExistente == null) {
                 JOptionPane.showMessageDialog(null, "Produto não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             // Entrada dos novos dados para o produto
-            String nome = JOptionPane.showInputDialog("Digite o novo nome do produto:", produtoExistente.getNome());
+            String nome = String.valueOf(JOptionPane.showInputDialog(
+                    null,                                // Componente pai
+                    "Digite o novo nome do produto:"+ produtoExistente.getNome(),
+                    "Editar Produtos",
+                    JOptionPane.PLAIN_MESSAGE,           // Tipo de mensagem (mensagem simples)
+                    produtoIcone,                                // Ícone (null para usar o padrão)
+                    null,                                // Opções a serem exibidas (null para padrão)
+                    null                                 // Opção padrão selecionada
+            ));
+
             Categoria novaCategoria = escolherCategoria(); // Obtendo nova categoria
             if (novaCategoria == null) return; // Cancelamento de operação
 
-            String fornecedorNome = JOptionPane.showInputDialog("Digite o novo fornecedor do produto:", produtoExistente.getFornecedor().getNome());
-            String precoStr = JOptionPane.showInputDialog("Digite o novo preço do produto:", produtoExistente.getPreco());
-            String quantidadeStr = JOptionPane.showInputDialog("Digite a nova quantidade em estoque:", produtoExistente.getQuantEstoque());
-            String quantMinimaStr = JOptionPane.showInputDialog("Digite a nova quantidade mínima do produto:", produtoExistente.getQuantMinima());
+            String fornecedorNome = String.valueOf(JOptionPane.showInputDialog(
+                    null,                                // Componente pai
+                    "Digite o novo fornecedor do produto:"+ produtoExistente.getFornecedor().getNome(),
+                    "Editar Produtos",
+                    JOptionPane.PLAIN_MESSAGE,           // Tipo de mensagem (mensagem simples)
+                    produtoIcone,                                // Ícone (null para usar o padrão)
+                    null,                                // Opções a serem exibidas (null para padrão)
+                    null                                 // Opção padrão selecionada
+            ));
+
+            String precoStr = String.valueOf(JOptionPane.showInputDialog(
+                    null,                                // Componente pai
+                    "Digite o novo preço do produto:"+ produtoExistente.getPreco(),
+                    "Editar Produtos",
+                    JOptionPane.PLAIN_MESSAGE,           // Tipo de mensagem (mensagem simples)
+                    produtoIcone,                                // Ícone (null para usar o padrão)
+                    null,                                // Opções a serem exibidas (null para padrão)
+                    null                                 // Opção padrão selecionada
+            ));
+
+            String quantidadeStr = String.valueOf(JOptionPane.showInputDialog(
+                    null,                                // Componente pai
+                    "Digite a nova quantidade em estoque:"+ produtoExistente.getQuantEstoque(),
+                    "Editar Produtos",
+                    JOptionPane.PLAIN_MESSAGE,           // Tipo de mensagem (mensagem simples)
+                    produtoIcone,                                // Ícone (null para usar o padrão)
+                    null,                                // Opções a serem exibidas (null para padrão)
+                    null                                 // Opção padrão selecionada
+            ));
+
+            String quantMinimaStr = String.valueOf(JOptionPane.showInputDialog(
+                    null,                                // Componente pai
+                    "Digite a nova quantidade mínima do produto:"+ produtoExistente.getQuantMinima(),
+                    "Editar Produtos",
+                    JOptionPane.PLAIN_MESSAGE,           // Tipo de mensagem (mensagem simples)
+                    produtoIcone,                                // Ícone (null para usar o padrão)
+                    null,                                // Opções a serem exibidas (null para padrão)
+                    null                                 // Opção padrão selecionada
+            ));
 
             // Cancelamento de operação
             if (nome == null || fornecedorNome == null || precoStr == null || quantidadeStr == null || quantMinimaStr == null) {
@@ -218,65 +270,127 @@ public class ProdutoController {
                 return;
             }
 
-            // Convertendo os dados inseridos
-            double preco = Double.parseDouble(precoStr);
-            int quantidade = Integer.parseInt(quantidadeStr);
-            int quantMinima = Integer.parseInt(quantMinimaStr);
+            // Verificando se as entradas para números são válidas
+            double preco;
+            int quantidade, quantMinima;
+            try {
+                preco = Double.parseDouble(precoStr);
+                quantidade = Integer.parseInt(quantidadeStr);
+                quantMinima = Integer.parseInt(quantMinimaStr);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Por favor, insira valores válidos para preço, quantidade e quantidade mínima.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Fornecedor fornecedor = new Fornecedor(fornecedorNome);
 
             // Atualizando os dados do produto
             produtoExistente.setNome(nome);
             produtoExistente.setCategoria(novaCategoria); // Atualizando categoria
-            produtoExistente.setFornecedor(new Fornecedor(fornecedorNome));
+            produtoExistente.setFornecedor(fornecedor);  // Atualizando fornecedor
             produtoExistente.setPreco(preco);
             produtoExistente.setQuantEstoque(quantidade);
             produtoExistente.setQuantMinima(quantMinima);
 
-            // Editando o produto no banco de dados e na lista de estoque
-            produtoDAO.atualizarProduto(produtoExistente);
-            JOptionPane.showMessageDialog(null, "Produto editado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            // Editando o produto no banco de dados
+            boolean produtoAtualizado = produtoDAO.atualizarProduto(produtoExistente);
+            if (!produtoAtualizado) {
+                JOptionPane.showMessageDialog(null, "Erro ao editar o produto. Tente novamente.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
+
+            // Exibindo mensagem detalhada
+            JOptionPane.showMessageDialog(
+                    null,
+                    String.format(
+                            "Produto editado com sucesso!\n\n" +
+                                    "Código: %s\n" +
+                                    "Nome: %s\n" +
+                                    "Categoria: %s\n" +
+                                    "Fornecedor: %s\n" +
+                                    "Preço: R$ %.2f\n" +
+                                    "Quantidade: %d\n" +
+                                    "Quantidade Mínima: %d",
+                            produtoExistente.getCodigo(),
+                            produtoExistente.getNome(),
+                            produtoExistente.getCategoria(),
+                            produtoExistente.getFornecedor().getNome(),
+                            produtoExistente.getPreco(),
+                            produtoExistente.getQuantEstoque(),
+                            produtoExistente.getQuantMinima()
+                    ),
+                    "Sucesso",
+                    JOptionPane.INFORMATION_MESSAGE,
+                    sucessoProduto
+            );
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao editar o produto: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
+
+
     public void excluirProduto() {
         try {
-            String codigoStr = JOptionPane.showInputDialog("Digite o código do produto a ser excluído:");
+            String codigo = String.valueOf(JOptionPane.showInputDialog(
+                    null,                                // Componente pai
+                    "Digite o código do produto a ser excluído:",
+                    "Editar Produtos",
+                    JOptionPane.PLAIN_MESSAGE,           // Tipo de mensagem (mensagem simples)
+                    excluirProduto,                                //
+                    // Ícone (null para usar o padrão)
+                    null,                                // Opções a serem exibidas (null para padrão)
+                    null                                 // Opção padrão selecionada
+            ));
 
-            if (codigoStr == null || codigoStr.isEmpty()) {
+            if (codigo == null || codigo.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Operação de exclusão de produto cancelada.", "Cancelado", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
-            int codigo = Integer.parseInt(codigoStr);
 
-            // Verificando se o produto existe
-            Produtos produtoExistente = null;
-            for (Produtos produto : estoque) {
-                if (produto.getCodigo().equals(codigo)) {
-                    produtoExistente = produto;
-                    break;
-                }
-            }
-
+            Produtos produtoExistente = produtoDAO.buscarProdutoPorCodigo(codigo); // Buscar produto no banco de dados
             if (produtoExistente == null) {
                 JOptionPane.showMessageDialog(null, "Produto não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Excluindo o produto
-            produtoDAO.removerProduto(codigo);
-            estoque.remove(produtoExistente);
-            JOptionPane.showMessageDialog(null, "Produto excluído com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            // Confirmar exclusão
+            int confirmacao = JOptionPane.showConfirmDialog(
+                    null,
+                    "Tem certeza de que deseja excluir o produto: " + produtoExistente.getNome() + "?",
+                    "Confirmar Exclusão",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+            );
+
+            if (confirmacao != JOptionPane.YES_OPTION) {
+                JOptionPane.showMessageDialog(null, "Operação de exclusão de produto cancelada.", "Cancelado", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            // Remover o produto do banco de dados e do estoque
+            boolean produtoRemovido = produtoDAO.removerProduto(codigo);
+            if (produtoRemovido) {
+                estoqueDAO.removerEstoque(produtoExistente); //
+                // Remover estoque associado ao produto
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Produto excluído com sucesso!",
+                        "Sucesso",
+                        JOptionPane.INFORMATION_MESSAGE,
+                        excluirProduto
+                );
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro ao excluir o produto. Tente novamente.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao excluir o produto: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-
-
-    */
 
 }
