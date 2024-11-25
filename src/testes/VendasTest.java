@@ -25,7 +25,7 @@ public class VendasTest {
     @Before
     public void setup() {
         vendaDAO = new VendaDAO();
-        produto1 = new Produtos(1, "Produto 1", null, null, 20.0, 10, 5);
+        produto1 = new Produtos("1", "Produto 1", null, null, 20.0, 10, 5);
         estoque = new Estoque(10, 5, produto1);
         cliente = new Cliente("12345678901", "Cliente Teste");
         vendedor = new Vendedor("Vendedor Teste");
@@ -54,7 +54,7 @@ public class VendasTest {
 
     @Test
     public void testVendaComMultiplosProdutos() {
-        Produtos produto2 = new Produtos(2, "Produto 2", null, null, 15.0, 20, 5);
+        Produtos produto2 = new Produtos("2", "Produto 2",null, null, 15.0, 20, 5);
         Estoque estoque2 = new Estoque(20, 5, produto2);
 
         Produtos[] produtosVendidos = {produto1, produto2};
@@ -69,7 +69,8 @@ public class VendasTest {
 
     @Test
     public void testVendaComProdutoPrecoZero() {
-        Produtos produtoComPrecoZero = new Produtos(3, "Produto Preço Zero", null, null, 0.0, 10, 5);
+        Produtos produtoComPrecoZero =
+                new Produtos("3", "Produto Preço Zero", null, null, 0.0, 10, 5);
         Produtos[] produtosVendidos = {produtoComPrecoZero};
         Integer[] quantVendida = {5};
         venda = new Vendas(new Date(), produtosVendidos, quantVendida, cliente, vendedor);
@@ -86,7 +87,7 @@ public class VendasTest {
         Integer[] quantVendida = {2};
         Vendas venda1 = new Vendas(new Date(), produtosVendidos, quantVendida, cliente, vendedor);
 
-        Produtos produto2 = new Produtos(2, "Produto 2", null, null, 15.0, 20, 5);
+        Produtos produto2 = new Produtos("2", "Produto 2",null, null, 15.0, 20, 5);
         Produtos[] produtosVendidos2 = {produto2};
         Integer[] quantVendida2 = {3};
         Vendas venda2 = new Vendas(new Date(), produtosVendidos2, quantVendida2, cliente, vendedor);

@@ -10,6 +10,7 @@ import java.util.List;
 import models.Vendedor;
 import models.Cliente;
 import persistence.VendaDAO;
+import persistence.ProdutoDAOImpl;
 import models.Vendas;
 import models.Estoque;
 import models.Produtos;
@@ -21,10 +22,13 @@ public class  VendaController {
     private VendaDAO vendaDAO = new VendaDAO();
     private ClienteController clienteController = new ClienteController();
     private VendedorController vendedorController = new VendedorController();
+    private ProdutoDAOImpl produtoDAO = new ProdutoDAOImpl();
+    private EstoqueDAO estoqueDAO = new EstoqueDAO();
+    private EstoqueController estoqueController = new EstoqueController();
 
     public void registrarVenda () {
         ImageIcon dataIcone = new ImageIcon("./.idea/images/data.png");
-        ImageIcon produtoIcone = new ImageIcon("./.idea/images/produto.png");
+        ImageIcon produtoIcone = new ImageIcon("./.idea/images/vendaProduto.png");
         ImageIcon pagamentoIcone = new ImageIcon("./.idea/images/pagamento.png");
         ImageIcon vendaIcone = new ImageIcon("./.idea/images/venda.png");
 
@@ -82,70 +86,88 @@ public class  VendaController {
             List<Produtos> produtosVendidos = new ArrayList<>();
             List<Integer> quantidadesVendidas = new ArrayList<>();
             Double valorTotal = 0.0d;
-            int continuarAdicionando = 0;
+            boolean continuarAdicionando = true;
 
             do {
-                String codigoProduto = String.valueOf(JOptionPane.showInputDialog(
+
+
+                // Exibir lista de produtos disponíveis
+                List<Estoque> estoques = estoqueDAO.listarTodos();
+                if (estoques.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Nenhum produto disponível no estoque. Operação cancelada.", "Estoque Vazio", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                StringBuilder listaProdutos = new StringBuilder("Produtos disponíveis:\n");
+                for (Estoque estoque : estoques) {
+                    Produtos produto = estoque.getProduto();
+                    listaProdutos.append("Código: ").append(produto.getCodigo())
+                            .append(" | Nome: ").append(produto.getNome())
+                            .append(" | Preço: R$ ").append(produto.getPreco())
+                            .append(" | Quantidade em Estoque: ").append(estoque.getQuant())
+                            .append("\n");
+                }
+
+                JOptionPane.showMessageDialog(null, listaProdutos.toString(), "Produtos Disponíveis", JOptionPane.INFORMATION_MESSAGE);
+
+
+                //erro
+                // Captura do código do produto
+                String codigoProduto = JOptionPane.showInputDialog(
                         null,                                // Componente pai
                         "Informe o código do produto:",     // Mensagem
                         "Adicionar Produto",                 // Título da janela
                         JOptionPane.PLAIN_MESSAGE,           // Tipo de mensagem (mensagem simples)
-                        produtoIcone,                                // Ícone (null para usar o padrão)
-                        null,                                // Opções a serem exibidas (null para padrão)
-                        null                                 // Opção padrão selecionada
-                ));
+                        produtoIcone,                       // Ícone (null para usar o padrão)
+                        null,                               // Opções a serem exibidas (null para padrão)
+                        ""                                  // Opção padrão selecionada
+                ).toString().trim();  // Utilizando trim() para
+                // remover espaços extras
 
-                Produtos produto = EstoqueController.buscarProdutoPorCodigo(codigoProduto);
-                
-                if (produto == null) { 
-                    JOptionPane.showMessageDialog(null, "Produto não encontrado. Tente novamente.", "Erro", JOptionPane.ERROR_MESSAGE);
-                    continue;
-                }
-
-                String quantidadeStr = String.valueOf(JOptionPane.showInputDialog(
-                        null,                                // Componente pai
-                        "Informe a quantidade para o produto: ",     // Mensagem
-                        "Quantidade do Produto",                 // Título da janela
-                        JOptionPane.PLAIN_MESSAGE,           // Tipo de mensagem (mensagem simples)
-                        produtoIcone,                                // Ícone (null para usar o padrão)
-                        null,                                // Opções a serem exibidas (null para padrão)
-                        null                                 // Opção padrão selecionada
-                ));
-
-
-                int quantidadeVendida = 0;
+                if (codigoProduto == null || codigoProduto.isEmpty()) break;
 
                 try {
-                    quantidadeVendida = Integer.parseInt(quantidadeStr);
+                    Produtos produto = estoqueDAO.buscarProdutoPorCodigo(codigoProduto);
+
+                    if (produto == null) {
+                        JOptionPane.showMessageDialog(null, "Produto não encontrado. Verifique o código.", "Erro", JOptionPane.ERROR_MESSAGE);
+                        continue;
+                    }
+
+                    String quantidadeStr = JOptionPane.showInputDialog(
+                            null,                                // Componente pai
+                            "Informe a quantidade para o produto: ",     // Mensagem
+                            "Quantidade do Produto",                 // Título da janela
+                            JOptionPane.PLAIN_MESSAGE,           // Tipo de mensagem (mensagem simples)
+                            produtoIcone,                                // Ícone (null para usar o padrão)
+                            null,                                // Opções a serem exibidas (null para padrão)
+                            ""                                 // Opção padrão selecionada
+                    ).toString();
+
+                    if (quantidadeStr == null || quantidadeStr.isEmpty()) break;
+
+                    int quantidade = Integer.parseInt(quantidadeStr);
+
+                    if (EstoqueController.verificarEstoque(produto, quantidade)) {
+                        EstoqueController.baixarEstoque(String.valueOf(produto), quantidade);
+                        produtosVendidos.add(produto);
+                        quantidadesVendidas.add(quantidade);
+                        valorTotal += produto.getPreco() * quantidade;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Estoque insuficiente para o produto: " + produto.getNome(), "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
                 } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(null, "Quantidade inválida. Por favor, insira um número inteiro.", "Erro", JOptionPane.ERROR_MESSAGE);
-                    continue;
+                    JOptionPane.showMessageDialog(null, "Código ou quantidade inválida.", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
 
-                if (EstoqueController.verificarEstoque(produto, quantidadeVendida)) {
-                    EstoqueController.baixarEstoque(String.valueOf(produto), quantidadeVendida);
-                    produtosVendidos.add(produto);
-                    quantidadesVendidas.add(quantidadeVendida);
-                    valorTotal += produto.getPreco() * quantidadeVendida;
-                } else {
-                    JOptionPane.showMessageDialog(null, "Estoque insuficiente para o produto: " + produto.getNome(), "Erro", JOptionPane.ERROR_MESSAGE);
-                }
+                int opcao = JOptionPane.showConfirmDialog(null, "Deseja adicionar mais produtos?", "Adicionar Produtos",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                continuarAdicionando = (opcao == JOptionPane.YES_OPTION);
 
-                continuarAdicionando = JOptionPane.showOptionDialog(
-                        null,                                       // Componente pai
-                        "Deseja adicionar mais produtos?",          // Mensagem
-                        "Adicionar Produtos",                       // Título da janela
-                        JOptionPane.DEFAULT_OPTION,                 // Tipo de opção padrão
-                        JOptionPane.QUESTION_MESSAGE,                // Tipo de mensagem (mensagem de pergunta)
-                        produtoIcone,                                       // Ícone (null para usar o padrão)
-                        new Object[] { "Sim", "Não" },              // Opções a serem exibidas
-                        "Sim"                                       // Opção padrão selecionada
-                );
+            } while (continuarAdicionando);
 
-            } while (continuarAdicionando == JOptionPane.YES_OPTION);
-
-            // Criar e registrar a venda
-            Vendas venda = new Vendas(dataVenda, produtosVendidos.toArray(new Produtos[0]), quantidadesVendidas.toArray(new Integer[0]), valorTotal, cliente, vendedor);
+            Vendas venda = new Vendas(dataVenda, produtosVendidos.toArray(new Produtos[0]), quantidadesVendidas.toArray(new Integer[0]),
+                    valorTotal, cliente, vendedor);
             vendaDAO.registrarVenda(venda);
 
             JOptionPane.showOptionDialog(

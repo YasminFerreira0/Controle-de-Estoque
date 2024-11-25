@@ -9,9 +9,9 @@ public interface ProdutoDAO {
 
         boolean atualizarProduto(Produtos produto);
 
-        boolean removerProduto(Integer codigo);
+        boolean removerProduto(String codigo);
 
-        Produtos buscarProdutoPorCodigo(Integer codigo);
+        Produtos buscarProdutoPorCodigo(String codigo);
 
         List<Produtos> listarTodos();
     }

@@ -2,33 +2,38 @@ package controllers;
 
 import models.Estoque;
 import models.Produtos;
-import models.Categoria;
 import persistence.EstoqueDAO;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class EstoqueController {
 
-
     private static EstoqueDAO estoqueDAO = new EstoqueDAO();
 
-    public static Produtos buscarProdutoPorCodigo(String codigo) {
-        for (Estoque estoque : estoqueDAO.listarTodos()) {
-            if (estoque.getProduto().getCodigo().equals(codigo)) {
+    public Produtos buscarProdutoPorCodigo(String codigo) {
+        System.out.println("Iniciando busca de produto com código: " + codigo);
+        List<Estoque> estoques = estoqueDAO.listarTodos();
+
+        for (Estoque estoque : estoques) {
+            if (estoque.getProduto().getCodigo().equalsIgnoreCase(codigo)) {
+                System.out.println("Produto encontrado: " + estoque.getProduto().getNome());
                 return estoque.getProduto();
             }
         }
+        System.out.println("Produto não encontrado no estoque. Código: " + codigo);
         return null;
     }
 
     public static Estoque buscarEstoquePorCodigo(String codigo) {
+        System.out.println("Iniciando busca de estoque com código do produto: " + codigo);
         for (Estoque estoque : estoqueDAO.listarTodos()) {
             if (estoque.getProduto().getCodigo().equals(codigo)) {
+                System.out.println("Estoque encontrado para o produto: " + estoque.getProduto().getNome());
                 return estoque;
             }
         }
+        System.out.println("Estoque não encontrado para o produto com código: " + codigo);
         return null;
     }
 
@@ -41,7 +46,7 @@ public class EstoqueController {
         Estoque estoque = buscarEstoquePorCodigo(codigoProduto);
         if (estoque != null) {
             if (estoque.getQuant() >= quantidade) {
-                estoque.atualizarEstoque(quantidade);
+                estoque.setQuant(estoque.getQuant() - quantidade);
                 estoqueDAO.atualizarEstoque(estoque);
 
                 if (estoque.precisaRepor()) {
@@ -80,152 +85,4 @@ public class EstoqueController {
             JOptionPane.showMessageDialog(null, "Produto não encontrado no estoque.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    public void listarEstoque() {
-        StringBuilder listaEstoque = new StringBuilder("Estoque Atual:\n");
-        for (Estoque estoque : estoqueDAO.listarTodos()) {
-            listaEstoque.append("Produto: ").append(estoque.getProduto().getNome())
-                    .append("\nCódigo: ").append(estoque.getProduto().getCodigo())
-                    .append("\nQuantidade Atual: ").append(estoque.getQuant())
-                    .append("\nQuantidade Mínima: ").append(estoque.getQuantMinima())
-                    .append("\nNecessita Reposição: ").append(estoque.precisaRepor() ? "Sim" : "Não")
-                    .append("\n--------------------------------\n");
-        }
-        JOptionPane.showMessageDialog(null, listaEstoque.toString(), "Estoque Atual", JOptionPane.INFORMATION_MESSAGE);
-    }
-    //******************************************************************************************
-    public void visualizarEstoque() {
-        // Pergunta ao usuário qual filtro ele quer usar
-        String[] opcoesFiltros = {"Código", "Categoria", "Quantidade Mínima", "Nenhum Filtro"};
-        String filtroEscolhido = (String) JOptionPane.showInputDialog(
-                null,
-                "Escolha o filtro para visualizar o estoque:",
-                "Seleção de Filtro",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                opcoesFiltros,
-                opcoesFiltros[0]  // Filtro padrão é 'Código'
-        );
-
-        if (filtroEscolhido == null || filtroEscolhido.equals("Nenhum Filtro")) {
-            // Se o usuário escolher 'Nenhum Filtro', exibe todos os produtos
-            listarEstoqueSemFiltro();
-        } else {
-            // Caso contrário, pergunta o valor para o filtro escolhido
-            String valorFiltro = JOptionPane.showInputDialog("Digite o valor para filtrar por " + filtroEscolhido + ":");
-
-            if (valorFiltro == null || valorFiltro.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Filtro inválido ou cancelado.", "Aviso", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            // Chama o metodo para listar o estoque filtrado com base na escolha
-            switch (filtroEscolhido) {
-                case "Código":
-                    listarEstoquePorCodigo(Integer.parseInt(valorFiltro));
-                    break;
-                case "Categoria":
-                    listarEstoquePorCategoria(valorFiltro);
-                    break;
-                case "Quantidade Mínima":
-                    listarEstoquePorQuantidadeMinima(Integer.parseInt(valorFiltro));
-                    break;
-            }
-        }
-    }
-
-    // Metodo para listar o estoque sem filtros
-    private void listarEstoqueSemFiltro() {
-        StringBuilder listaEstoque = new StringBuilder("Estoque Atual:\n");
-
-        for (Estoque estoque : estoqueDAO.listarTodos()) {
-            Produtos produto = estoque.getProduto();
-            listaEstoque.append("Produto: ").append(produto.getNome())
-                    .append("\nCódigo: ").append(produto.getCodigo())
-                    .append("\nCategoria: ").append(produto.getCategoria())
-                    .append("\nQuantidade Atual: ").append(estoque.getQuant())
-                    .append("\nQuantidade Mínima: ").append(estoque.getQuantMinima())
-                    .append("\nNecessita Reposição: ").append(estoque.precisaRepor() ? "Sim" : "Não")
-                    .append("\n--------------------------------\n");
-        }
-
-        if (listaEstoque.length() > 20) {
-            JOptionPane.showMessageDialog(null, listaEstoque.toString(), "Estoque Atual", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(null, "Estoque vazio ou sem produtos.", "Estoque Atual", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    // Metodo para listar o estoque filtrado por código
-    private void listarEstoquePorCodigo(int codigo) {
-        StringBuilder listaEstoque = new StringBuilder("Estoque Filtrado por Código " + codigo + ":\n");
-
-        for (Estoque estoque : estoqueDAO.listarTodos()) {
-            Produtos produto = estoque.getProduto();
-            if (produto.getCodigo().equals(codigo)) {
-                listaEstoque.append("Produto: ").append(produto.getNome())
-                        .append("\nCódigo: ").append(produto.getCodigo())
-                        .append("\nCategoria: ").append(produto.getCategoria())
-                        .append("\nQuantidade Atual: ").append(estoque.getQuant())
-                        .append("\nQuantidade Mínima: ").append(estoque.getQuantMinima())
-                        .append("\nNecessita Reposição: ").append(estoque.precisaRepor() ? "Sim" : "Não")
-                        .append("\n--------------------------------\n");
-            }
-        }
-
-        if (listaEstoque.length() > 20) {
-            JOptionPane.showMessageDialog(null, listaEstoque.toString(), "Estoque Filtrado por Código", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(null, "Nenhum produto encontrado com o código " + codigo, "Resultado do Filtro", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    // Metodo para listar o estoque filtrado por categoria
-    private void listarEstoquePorCategoria(String categoria) {
-        StringBuilder listaEstoque = new StringBuilder("Estoque Filtrado por Categoria " + categoria + ":\n");
-
-        for (Estoque estoque : estoqueDAO.listarTodos()) {
-            Produtos produto = estoque.getProduto();
-            if (produto.getCategoria().name().equalsIgnoreCase(categoria)) {
-                listaEstoque.append("Produto: ").append(produto.getNome())
-                        .append("\nCódigo: ").append(produto.getCodigo())
-                        .append("\nCategoria: ").append(produto.getCategoria())
-                        .append("\nQuantidade Atual: ").append(estoque.getQuant())
-                        .append("\nQuantidade Mínima: ").append(estoque.getQuantMinima())
-                        .append("\nNecessita Reposição: ").append(estoque.precisaRepor() ? "Sim" : "Não")
-                        .append("\n--------------------------------\n");
-            }
-        }
-
-        if (listaEstoque.length() > 20) {
-            JOptionPane.showMessageDialog(null, listaEstoque.toString(), "Estoque Filtrado por Categoria", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(null, "Nenhum produto encontrado para a categoria " + categoria, "Resultado do Filtro", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    // Metodo para listar o estoque filtrado por quantidade mínima
-    private void listarEstoquePorQuantidadeMinima(int quantidadeMinima) {
-        StringBuilder listaEstoque = new StringBuilder("Estoque Filtrado por Quantidade Mínima " + quantidadeMinima + ":\n");
-
-        for (Estoque estoque : estoqueDAO.listarTodos()) {
-            Produtos produto = estoque.getProduto();
-            if (estoque.getQuant() < quantidadeMinima) {
-                listaEstoque.append("Produto: ").append(produto.getNome())
-                        .append("\nCódigo: ").append(produto.getCodigo())
-                        .append("\nCategoria: ").append(produto.getCategoria())
-                        .append("\nQuantidade Atual: ").append(estoque.getQuant())
-                        .append("\nQuantidade Mínima: ").append(estoque.getQuantMinima())
-                        .append("\nNecessita Reposição: ").append(estoque.precisaRepor() ? "Sim" : "Não")
-                        .append("\n--------------------------------\n");
-            }
-        }
-
-        if (listaEstoque.length() > 20) {
-            JOptionPane.showMessageDialog(null, listaEstoque.toString(), "Estoque Filtrado por Quantidade Mínima", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(null, "Nenhum produto com quantidade menor que " + quantidadeMinima, "Resultado do Filtro", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
 }
-

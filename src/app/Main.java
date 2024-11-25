@@ -24,6 +24,7 @@ public class Main {
 
         ImageIcon loja = new ImageIcon("./.idea/images/loja.png");
         ImageIcon relatorio = new ImageIcon("./.idea/images/relatorio.png");
+        ImageIcon produtoIcone = new ImageIcon("./.idea/images/produto.png");
 
         try{
             do{
@@ -52,11 +53,11 @@ public class Main {
                             String[] opcProd = {"Cadastrar Produto", "Editar Produto", "Excluir Produto", "Sair"};
                             int escolha = JOptionPane.showOptionDialog(
                                     null,
-                                    "Escolha uma opção:",
-                                    "Menu de Operações",
+                                    "Escolha a operação que deseja realizar:",
+                                    "Produto",
                                     JOptionPane.DEFAULT_OPTION,
                                     JOptionPane.INFORMATION_MESSAGE,
-                                    null,
+                                    produtoIcone,
                                     opcProd,
                                     opcProd[0]
                             );
@@ -68,11 +69,13 @@ public class Main {
                                     break;
 
                                 case 1:  // Editar Produto
-                                    produtoController.editarProduto();
+                                    //produtoController
+                                    // .editarProduto();
                                     break;
 
                                 case 2:  // Excluir Produto
-                                    produtoController.excluirProduto();
+                                    //produtoController
+                                    // .excluirProduto();
                                     break;
 
                                 case 3:  // Sair
@@ -81,10 +84,15 @@ public class Main {
                                 default:
                                     System.exit(0);
                             }
+                            if (escolha == 3 || escolha == JOptionPane.CLOSED_OPTION) {
+                                break; // Interrompe o loop do menu Produto
+                            }
                         }
+                        break;
                     case 1:
 
-                        estoqueController.visualizarEstoque();
+                        //estoqueController
+                        // .visualizarEstoque();
 
                         break;
                     case 2:

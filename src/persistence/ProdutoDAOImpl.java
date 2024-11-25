@@ -34,14 +34,14 @@ public class ProdutoDAOImpl implements ProdutoDAO {
     }
 
     @Override
-    public boolean removerProduto(Integer codigo) {
+    public boolean removerProduto(String codigo) {
         return produtos.removeIf(produto -> produto.getCodigo().equals(codigo));
     }
 
     @Override
-    public Produtos buscarProdutoPorCodigo(Integer codigo) {
+    public Produtos buscarProdutoPorCodigo(String codigo) {
         for (Produtos produto : produtos) {
-            if (produto.getCodigo().equals(codigo)) {
+            if (produto.getCodigo().equalsIgnoreCase(codigo)) {
                 return produto;
             }
         }

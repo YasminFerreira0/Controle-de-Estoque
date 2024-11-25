@@ -3,7 +3,7 @@ package models;
 import java.util.Objects;
 
 public class Produtos {
-    private static Integer codigo;
+    private String codigo;
     private String nome;
     private static Categoria categoria;
     private Fornecedor fornecedor;
@@ -11,7 +11,8 @@ public class Produtos {
     private static Integer quantEstoque;
     private Integer quantMinima;
 
-    public Produtos(Integer codigo, String nome, Categoria categoria, Fornecedor fornecedor, Double preco, Integer quantEstoque, Integer quantMinima) {
+    public Produtos(String codigo, String nome,
+                    Categoria categoria, Fornecedor fornecedor, Double preco, Integer quantEstoque, Integer quantMinima) {
         this.codigo = codigo;
         this.nome = nome;
         this.categoria = categoria;
@@ -21,11 +22,11 @@ public class Produtos {
         this.quantMinima = quantMinima;
     }
 
-    public static Integer getCodigo() {
+    public String getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(Integer codigo) {
+    public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
 
