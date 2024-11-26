@@ -45,9 +45,6 @@ public class Main {
                 // Caso queira tratar a escolha
                 switch (opc) {
                     case 0:
-                        //*******************************************************************************************
-                        // Switch case referente as rotinas com produto: cadastrar, editar, excluir
-                        //*******************************************************************************************
                         while (true) {
                             // Menu com as opções
                             String[] opcProd = {"Cadastrar Produto", "Editar Produto", "Excluir Produto", "Sair"};
@@ -89,12 +86,10 @@ public class Main {
                         break;
                     case 1:
 
-                        //estoqueController
-                        // .visualizarEstoque();
+                        estoqueController.visualizarEstoque();
 
                         break;
                     case 2:
-                        //Implementação do VendaController
                         vendaController.registrarVenda();
                     break;
                     case 3:
@@ -114,20 +109,26 @@ public class Main {
                         switch(opcRelatorio){
                             case 0:
 
-                                String[] filtrosEstoque = {"Por Produto", "Por Categoria", "Por Volume de Vendas", "Por Quantidade em Estoque"};
+                                String[] filtrosEstoque = {
+                                        "Por Produto",
+                                        "Por Categoria",
+                                        "Por Volume de Vendas",
+                                        "Por Quantidade em Estoque"
+                                };
 
                                 int opcFiltroEstoque = JOptionPane.showOptionDialog(
                                         null,
                                         "Selecione o filtro do relatório de estoque", // Mensagem
                                         "Relatório de Estoque",                      // Título da janela
-                                        JOptionPane.DEFAULT_OPTION,                   // Tipo de opção padrão
-                                        JOptionPane.INFORMATION_MESSAGE,              // Tipo de mensagem (informação)
-                                        relatorio,                                   // Ícone
+                                        JOptionPane.DEFAULT_OPTION,                  // Tipo de opção padrão
+                                        JOptionPane.INFORMATION_MESSAGE,             // Tipo de mensagem (informação)
+                                        null,                                        // Ícone
                                         filtrosEstoque,                              // Opções a serem exibidas
                                         filtrosEstoque[0]                            // Opção padrão selecionada
                                 );
 
-                                List<Estoque> estoques = EstoqueDAO.listarTodos();  // Supondo que você tenha um metodo para listar os estoques
+                                // Supondo que você tenha um método para listar os estoques.
+                                List<Estoque> estoques = EstoqueDAO.listarTodos();
                                 if (estoques.isEmpty()) {
                                     JOptionPane.showMessageDialog(null, "Nenhum produto no estoque.", "Aviso", JOptionPane.WARNING_MESSAGE);
                                     return;
@@ -136,25 +137,31 @@ public class Main {
                                 switch (opcFiltroEstoque) {
                                     case 0: // Por Produto
                                         String produtoFiltro = JOptionPane.showInputDialog(
-                                                null,                                // Componente pai (null para usar o componente raiz)
-                                                "Informe o nome do produto para filtrar:",  // Mensagem
-                                                "Relatório de Estoque por Produto", // Título da janela
-                                                JOptionPane.PLAIN_MESSAGE            // Tipo de mensagem
+                                                null,
+                                                "Informe o nome do produto para filtrar:",
+                                                "Relatório de Estoque por Produto",
+                                                JOptionPane.PLAIN_MESSAGE
                                         );
 
-                                        // Verificando se o usuário não cancelou ou deixou o campo em branco
                                         if (produtoFiltro == null || produtoFiltro.trim().isEmpty()) {
                                             JOptionPane.showMessageDialog(null, "Produto não informado. Retornando ao menu principal.", "Aviso", JOptionPane.WARNING_MESSAGE);
-                                            return;  // Retorna ao menu, você pode trocar isso dependendo da lógica
+                                            return;
                                         }
 
                                         StringBuilder relatorioPorProduto = new StringBuilder("Estoque por Produto:\n");
+                                        boolean produtoEncontrado = false;
                                         for (Estoque estoque : estoques) {
                                             if (estoque.getProduto().getNome().equalsIgnoreCase(produtoFiltro)) {
                                                 relatorioPorProduto.append(estoque).append("\n");
+                                                produtoEncontrado = true;
                                             }
                                         }
-                                        JOptionPane.showMessageDialog(null, relatorioPorProduto.toString(), "Relatório: Por Produto", JOptionPane.INFORMATION_MESSAGE);
+
+                                        if (!produtoEncontrado) {
+                                            JOptionPane.showMessageDialog(null, "Nenhum produto encontrado com o nome informado.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, relatorioPorProduto.toString(), "Relatório: Por Produto", JOptionPane.INFORMATION_MESSAGE);
+                                        }
                                         break;
 
                                     case 1: // Por Categoria
@@ -173,12 +180,19 @@ public class Main {
                                         try {
                                             Categoria categoriaFiltro = Categoria.valueOf(categoriaFiltroStr.toUpperCase());
                                             StringBuilder relatorioPorCategoria = new StringBuilder("Estoque por Categoria:\n");
+                                            boolean categoriaEncontrada = false;
                                             for (Estoque estoque : estoques) {
                                                 if (estoque.getProduto().getCategoria() == categoriaFiltro) {
                                                     relatorioPorCategoria.append(estoque).append("\n");
+                                                    categoriaEncontrada = true;
                                                 }
                                             }
-                                            JOptionPane.showMessageDialog(null, relatorioPorCategoria.toString(), "Relatório: Por Categoria", JOptionPane.INFORMATION_MESSAGE);
+
+                                            if (!categoriaEncontrada) {
+                                                JOptionPane.showMessageDialog(null, "Nenhum produto encontrado na categoria informada.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                                            } else {
+                                                JOptionPane.showMessageDialog(null, relatorioPorCategoria.toString(), "Relatório: Por Categoria", JOptionPane.INFORMATION_MESSAGE);
+                                            }
                                         } catch (IllegalArgumentException e) {
                                             JOptionPane.showMessageDialog(null, "Categoria inválida! Certifique-se de inserir uma das categorias disponíveis.", "Erro", JOptionPane.ERROR_MESSAGE);
                                         }
@@ -186,10 +200,11 @@ public class Main {
 
                                     case 2: // Por Volume de Vendas
                                         Map<Produtos, Integer> volumePorProduto = new HashMap<>();
-                                        // Assumindo que o volume de vendas é calculado a partir das vendas anteriores
-                                        for (Vendas venda : vendas) {  // Você deve ter um histórico de vendas aqui
+                                        vendas = VendaDAO.listarHistoricoVendas();
+
+                                        for (Vendas venda : vendas) {
                                             for (Produtos produto : venda.getProdutosVendidos()) {
-                                                volumePorProduto.put(produto, volumePorProduto.getOrDefault(produto, 0) + 1);  // Conta a quantidade de vezes que o produto foi vendido
+                                                volumePorProduto.put(produto, volumePorProduto.getOrDefault(produto, 0) + 1);
                                             }
                                         }
 
@@ -201,23 +216,37 @@ public class Main {
                                             relatorioPorVolume.append("Produto: ").append(entry.getKey().getNome())
                                                     .append(" | Volume de Vendas: ").append(entry.getValue()).append("\n");
                                         }
-                                        JOptionPane.showMessageDialog(null, relatorioPorVolume.toString(), "Relatório: Por Volume de Vendas", JOptionPane.INFORMATION_MESSAGE);
+
+                                        if (relatorioPorVolume.length() == 0) {
+                                            JOptionPane.showMessageDialog(null, "Nenhuma venda registrada até o momento.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, relatorioPorVolume.toString(), "Relatório: Por Volume de Vendas", JOptionPane.INFORMATION_MESSAGE);
+                                        }
                                         break;
 
                                     case 3: // Por Quantidade em Estoque
                                         StringBuilder relatorioPorQuantidade = new StringBuilder("Produtos abaixo da quantidade mínima em estoque:\n");
+                                        boolean produtoAbaixoMinimo = false;
                                         for (Estoque estoque : estoques) {
                                             if (estoque.getQuant() < estoque.getQuantMinima()) {
                                                 relatorioPorQuantidade.append(estoque).append("\n");
+                                                produtoAbaixoMinimo = true;
                                             }
                                         }
-                                        JOptionPane.showMessageDialog(null, relatorioPorQuantidade.toString(), "Relatório: Por Quantidade em Estoque", JOptionPane.INFORMATION_MESSAGE);
+
+                                        if (!produtoAbaixoMinimo) {
+                                            JOptionPane.showMessageDialog(null, "Todos os produtos estão acima da quantidade mínima em estoque.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, relatorioPorQuantidade.toString(), "Relatório: Por Quantidade em Estoque", JOptionPane.INFORMATION_MESSAGE);
+                                        }
                                         break;
 
                                     default:
                                         JOptionPane.showMessageDialog(null, "Nenhuma opção selecionada.", "Erro", JOptionPane.ERROR_MESSAGE);
                                         break;
                                 }
+
+
                             break;
                             case 1:
                                 String[] filtrosVenda = {"Por Produto", "Por Categoria", "Por Data", "Por Volume de Venda"};
@@ -365,7 +394,6 @@ public class Main {
                         break;
                 }
 
-                // Condição para sair do loop (caso a opção "Sair" seja escolhida)
                 if (opc == 4) {
                     break; // Sai do laço 'do-while' quando a opção "Sair" for selecionada
                 }

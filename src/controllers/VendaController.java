@@ -29,7 +29,6 @@ public class  VendaController {
     public void registrarVenda () {
         ImageIcon dataIcone = new ImageIcon("./.idea/images/data.png");
         ImageIcon produtoIcone = new ImageIcon("./.idea/images/vendaProduto.png");
-        ImageIcon pagamentoIcone = new ImageIcon("./.idea/images/pagamento.png");
         ImageIcon vendaIcone = new ImageIcon("./.idea/images/venda.png");
 
         try{
@@ -111,7 +110,9 @@ public class  VendaController {
                 JOptionPane.showMessageDialog(null, listaProdutos.toString(), "Produtos Disponíveis", JOptionPane.INFORMATION_MESSAGE);
 
 
-                //erro
+                //erro na busca do produto no estoque
+
+
                 // Captura do código do produto
                 String codigoProduto = JOptionPane.showInputDialog(
                         null,                                // Componente pai
@@ -121,14 +122,16 @@ public class  VendaController {
                         produtoIcone,                       // Ícone (null para usar o padrão)
                         null,                               // Opções a serem exibidas (null para padrão)
                         ""                                  // Opção padrão selecionada
-                ).toString().trim();  // Utilizando trim() para
-                // remover espaços extras
+                ).toString().trim();
 
-                if (codigoProduto == null || codigoProduto.isEmpty()) break;
+                if (codigoProduto.isEmpty()) break;
 
                 try {
-                    Produtos produto = estoqueDAO.buscarProdutoPorCodigo(codigoProduto);
+                    //Erro: produto nao encontrado no estoque;
 
+                    //Produtos produto = estoqueDAO.buscarProdutoPorCodigo(codigoProduto);
+                    //Produtos produto = produtoDAO.buscarProdutoPorCodigo(codigoProduto);
+                    Produtos produto = estoqueController.buscarProdutoPorCodigo(codigoProduto);
                     if (produto == null) {
                         JOptionPane.showMessageDialog(null, "Produto não encontrado. Verifique o código.", "Erro", JOptionPane.ERROR_MESSAGE);
                         continue;
@@ -148,8 +151,8 @@ public class  VendaController {
 
                     int quantidade = Integer.parseInt(quantidadeStr);
 
-                    if (EstoqueController.verificarEstoque(produto, quantidade)) {
-                        EstoqueController.baixarEstoque(String.valueOf(produto), quantidade);
+                    if (estoqueController.verificarEstoque(produto, quantidade)) {
+                        estoqueController.baixarEstoque(String.valueOf(produto), quantidade);
                         produtosVendidos.add(produto);
                         quantidadesVendidas.add(quantidade);
                         valorTotal += produto.getPreco() * quantidade;

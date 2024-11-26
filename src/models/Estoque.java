@@ -39,12 +39,17 @@ public class Estoque {
         return quant < quantMinima;
     }
 
-    public void atualizarEstoque(Integer quantidadeVendida) {
+    /*public void atualizarEstoque(Integer quantidadeVendida) {
         if (quant >= quantidadeVendida) {
             this.quant -= quantidadeVendida;
         } else {
             System.out.println("Estoque insuficiente para o produto: " + produto.getNome());
         }
+    }*/
+
+    @Override
+    public String toString() {
+        return "Produto: " + produto.getNome() + ", Quantidade: " + produto.getQuantEstoque();
     }
 
 }

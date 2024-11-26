@@ -16,6 +16,7 @@ public class ProdutoController {
     private FornecedorController fornecedorController = new FornecedorController();
     private final ProdutoDAOImpl produtoDAO = new ProdutoDAOImpl();
     private EstoqueDAO estoqueDAO = new EstoqueDAO();
+    private EstoqueController estoqueController = new EstoqueController();
 
 
     ImageIcon produtoIcone = new ImageIcon("./.idea/images/produto.png");
@@ -114,8 +115,10 @@ public class ProdutoController {
                 return;
             }
 
-            Estoque estoque = new Estoque(quantidade, quantMinima, produto);
-            estoqueDAO.adicionarEstoque(estoque);
+            //Estoque estoque = new Estoque(quantidade, quantMinima, produto);
+            //estoqueDAO.adicionarEstoque(estoque);
+
+            estoqueController.cadastrarProdutoNoEstoque(produto, quantidade, quantMinima);
 
 
             // Exibindo mensagem detalhada

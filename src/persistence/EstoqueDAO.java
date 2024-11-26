@@ -15,8 +15,7 @@ public class EstoqueDAO {
                 return false;
             }
         }
-        estoques.add(estoque);
-        return true;
+        return estoques.add(estoque);
     }
 
     public boolean atualizarEstoque(Estoque estoque) {
@@ -48,7 +47,6 @@ public class EstoqueDAO {
         }
         return null;
     }
-
 
     public static List<Estoque> listarTodos() {
         return new LinkedList<>(estoques);
