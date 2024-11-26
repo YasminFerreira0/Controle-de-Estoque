@@ -99,4 +99,27 @@ public class Vendas {
         this.vendedor = vendedor;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Data da Venda: ").append(dataVenda).append("\n");
+        sb.append("Cliente: ").append(cliente != null ? cliente.getNome() : "Não informado").append("\n");
+        sb.append("Vendedor: ").append(vendedor != null ? vendedor.getNome() : "Não informado").append("\n");
+        sb.append("Produtos Vendidos:\n");
+
+        if (produtosVendidos != null && quantVendida != null) {
+            for (int i = 0; i < produtosVendidos.length; i++) {
+                sb.append("- ").append(produtosVendidos[i].getNome())
+                        .append(" | Quantidade: ").append(quantVendida[i])
+                        .append(" | Preço Unitário: ").append(produtosVendidos[i].getPreco())
+                        .append("\n");
+            }
+        } else {
+            sb.append("Nenhum produto vendido.\n");
+        }
+
+        sb.append("Valor Total: ").append(valorTotal != null ? String.format("%.2f", valorTotal) : "Não calculado").append("\n");
+        return sb.toString();
+    }
 }

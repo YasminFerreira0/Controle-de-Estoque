@@ -49,7 +49,18 @@ public class Estoque {
 
     @Override
     public String toString() {
-        return "Produto: " + produto.getNome() + ", Quantidade: " + produto.getQuantEstoque();
-    }
+        StringBuilder sb = new StringBuilder();
 
+        sb.append("====================================\n");
+        sb.append("          Produto em Estoque        \n");
+        sb.append("====================================\n");
+        sb.append("Produto: ").append(produto.getNome()).append("\n");
+        sb.append("Código do Produto: ").append(produto.getCodigo()).append("\n");  // Caso haja um código
+        sb.append("Quantidade Atual: ").append(quant).append("\n");
+        sb.append("Quantidade Mínima: ").append(quantMinima).append("\n");
+        sb.append("Necessita Reposição: ").append(precisaRepor() ? "Sim" : "Não").append("\n");
+        sb.append("====================================\n");
+
+        return sb.toString();
+    }
 }

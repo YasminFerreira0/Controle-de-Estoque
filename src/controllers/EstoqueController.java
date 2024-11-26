@@ -90,7 +90,7 @@ public class EstoqueController {
 
     public void visualizarEstoque() {
         // Pergunta ao usuário qual filtro ele quer usar
-        String[] opcoesFiltros = {"Código", "Categoria", "Quantidade Mínima", "Nenhum Filtro"};
+        String[] opcoesFiltros = {"Código", "Categoria", "Nenhum Filtro"};
         String filtroEscolhido = (String) JOptionPane.showInputDialog(
                 null,
                 "Escolha o filtro para visualizar o estoque:",
@@ -135,9 +135,7 @@ public class EstoqueController {
                 case "Código":
                     listarEstoquePorCodigo(valorFiltro);
                     break;
-                case "Quantidade Mínima":
-                    listarEstoquePorQuantidadeMinima();
-                    break;
+
             }
         }
     }
@@ -205,7 +203,7 @@ public class EstoqueController {
     // Metodo para listar o estoque filtrado por quantidade mínima
 
 
-    private void listarEstoquePorQuantidadeMinima() {
+    public void listarEstoquePorQuantidadeMinima() {
         StringBuilder listaEstoque = new StringBuilder("Produtos com Estoque Igual ou Abaixo da Quantidade Mínima:\n");
 
         for (Estoque estoque : estoqueDAO.listarTodos()) {
